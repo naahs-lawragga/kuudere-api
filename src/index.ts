@@ -38,9 +38,13 @@ const app = new Elysia()
       set,
       404
     );
-  })
-  .listen(PORT);
+  });
 
-console.log(`🦊 Elysia server started on ${PORT}`);
+// Vercel imports the exported Elysia instance and manages its own listener.
+// Opening a port during a serverless function cold start causes a 500 error.
+if (import.meta.main && !process.env.VERCEL) {
+  app.listen(PORT);
+  console.log(`🦊 Elysia server started on ${PORT}`);
+}
 
 export default app;
